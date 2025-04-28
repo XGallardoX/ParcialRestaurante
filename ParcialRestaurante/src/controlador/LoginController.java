@@ -24,4 +24,9 @@ public class LoginController {
     public void registrarUsuario(Usuario usuario) {
         usuarioDAO.agregarUsuario(usuario);
     }
+
+    // Método para cargar los usuarios desde un archivo
+    public void cargarUsuariosDesdeArchivo() {
+        usuarioDAO.cargarUsuarios(); // Cargar los usuarios desde el archivo
+    }
 }

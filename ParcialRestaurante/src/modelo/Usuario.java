@@ -1,6 +1,10 @@
 package modelo;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
+    private static final long serialVersionUID = 1L;  // Identificador para la serialización
+
     private int idUsuario;
     private String nombre;
     private String correo;
@@ -9,14 +13,14 @@ public class Usuario {
 
     // Constructor con idUsuario
     public Usuario(int idUsuario, String nombre, String correo, String contrasena, String rol) {
-        this.idUsuario = idUsuario;  // Asignar idUsuario
+        this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.correo = correo;
         this.contrasena = contrasena;
         this.rol = rol;
     }
 
-    // Constructor sin idUsuario (puede usarse para crear un nuevo usuario)
+    // Constructor sin idUsuario (para crear un nuevo usuario)
     public Usuario(String nombre, String correo, String contrasena, String rol) {
         this.nombre = nombre;
         this.correo = correo;
@@ -25,18 +29,38 @@ public class Usuario {
     }
 
     // Getters y Setters
-    public int getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-    public String getCorreo() { return correo; }
-    public void setCorreo(String correo) { this.correo = correo; }
+    public String getCorreo() {
+        return correo;
+    }
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
 
-    public String getContrasena() { return contrasena; }
-    public void setContrasena(String contrasena) { this.contrasena = contrasena; }
+    public String getContrasena() {
+        return contrasena;
+    }
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
 
-    public String getRol() { return rol; }
-    public void setRol(String rol) { this.rol = rol; }
+    public String getRol() {
+        return rol;
+    }
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
 }

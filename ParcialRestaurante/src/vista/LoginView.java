@@ -81,6 +81,9 @@ public class LoginView extends JFrame {
         panel.add(botonRegistrar);  // Añadir botón de registro
 
         add(panel);
+
+        // Cargar los usuarios desde el archivo al iniciar la vista
+        loginController.cargarUsuariosDesdeArchivo();  // Cargar los usuarios guardados
     }
 
     // Mostrar la ventana de registro

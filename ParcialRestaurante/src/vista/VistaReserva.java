@@ -119,15 +119,54 @@ public class VistaReserva extends JFrame {
     private void verReservas() {
         List<Reserva> reservas = reservaController.verReservasUsuario(usuario.getIdUsuario());
 
-        StringBuilder reservasText = new StringBuilder("Mis Reservas:\n");
-        for (Reserva reserva : reservas) {
-            reservasText.append("Mesa: ").append(reserva.getIdMesa())
-                        .append(", Fecha: ").append(reserva.getFecha())
-                        .append(", Hora: ").append(reserva.getHora())
-                        .append(", Estado: ").append(reserva.getEstado())
-                        .append("\n");
+        // Definimos las columnas
+        String[] columnas = {"Mesa", "Fecha", "Hora", "Estado"};
+
+        // Llenamos los datos
+        String[][] datos = new String[reservas.size()][4];
+        for (int i = 0; i < reservas.size(); i++) {
+            Reserva reserva = reservas.get(i);
+            datos[i][0] = String.valueOf(reserva.getIdMesa());
+            datos[i][1] = reserva.getFecha().toString();
+            datos[i][2] = reserva.getHora().toString();
+            datos[i][3] = reserva.getEstado();
         }
 
-        JOptionPane.showMessageDialog(this, reservasText.toString());
+        // Crear la tabla
+        JTable tabla = new JTable(datos, columnas) {
+            // Pintar filas alternadas
+            @Override
+            public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (!isRowSelected(row)) {
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(230, 230, 230)); // Blanco y gris claro
+                } else {
+                    c.setBackground(new Color(184, 207, 229)); // Color cuando se selecciona la fila
+                }
+                return c;
+            }
+        };
+
+        // Ajustes extra de la tabla
+        tabla.setRowHeight(25);
+        tabla.setFillsViewportHeight(true);
+        tabla.setGridColor(Color.LIGHT_GRAY);
+
+        // Personalizar encabezado
+        tabla.getTableHeader().setBackground(new Color(60, 60, 60));
+        tabla.getTableHeader().setForeground(Color.WHITE);
+        tabla.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+
+        JScrollPane scrollPane = new JScrollPane(tabla);
+
+        // Mostrar en un nuevo JFrame en lugar de JOptionPane
+        JFrame frame = new JFrame("Mis Reservas");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(500, 300);
+        frame.setLocationRelativeTo(this);
+        frame.add(scrollPane);
+        frame.setVisible(true);
     }
+
+
 }
