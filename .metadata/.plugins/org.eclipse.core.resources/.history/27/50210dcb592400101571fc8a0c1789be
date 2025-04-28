@@ -68,6 +68,7 @@ public class RegistroView extends JFrame {
             }
         });
 
+        });
 
         panel.add(etiquetaNombre);
         panel.add(campoNombre);

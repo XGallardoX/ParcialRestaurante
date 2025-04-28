@@ -61,15 +61,13 @@ public class VistaLogin extends JFrame {
             }
         });
 
-     // Acción de botón de registro
+        // Acción de botón de registro
         registroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();  // Cierra la ventana de login actual
-                RegistroView registroView = new RegistroView(loginController);  // Pasa el loginController existente
-                registroView.setVisible(true);  // Muestra la ventana de registro
+                // Aquí puedes implementar la funcionalidad de registro si lo deseas
+                JOptionPane.showMessageDialog(null, "Funcionalidad de registro no implementada.");
             }
         });
-
     }
 }

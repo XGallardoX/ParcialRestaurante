@@ -51,7 +51,9 @@ public class RegistroView extends JFrame {
                 String contrasena = new String(campoContrasena.getPassword());
                 String rol = (String) comboRol.getSelectedItem();
 
-                Usuario nuevoUsuario = new Usuario(0, nombre, correo, contrasena, rol);
+                // Crear nuevo usuario con los atributos recibidos
+                // idUsuario se podría establecer en la base de datos como autoincremental
+                Usuario nuevoUsuario = new Usuario(0, nombre, correo, contrasena, rol);  // idUsuario es 0 inicialmente
 
                 loginController.registrarUsuario(nuevoUsuario);
 
@@ -59,15 +61,9 @@ public class RegistroView extends JFrame {
                         "¡Usuario registrado con éxito!",
                         "Registro Exitoso",
                         JOptionPane.INFORMATION_MESSAGE);
-
-                dispose();  // Cerrar esta ventana de registro
-
-                // Abrir la ventana de login nuevamente
-                VistaLogin vistaLogin = new VistaLogin();
-                vistaLogin.setVisible(true);
+                dispose();  // Cerrar la ventana de registro
             }
         });
-
 
         panel.add(etiquetaNombre);
         panel.add(campoNombre);
