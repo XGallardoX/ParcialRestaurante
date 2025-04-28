@@ -1,0 +1,34 @@
+package modelo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UsuarioDAO {
+    private static UsuarioDAO instancia;
+    private List<Usuario> usuarios;
+
+    // Constructor privado para implementar el patrón Singleton
+    private UsuarioDAO() {
+        usuarios = new ArrayList<>();
+        // Aquí cargarías los usuarios desde la base de datos o archivo si es necesario
+    }
+
+    public static UsuarioDAO getInstancia() {
+        if (instancia == null) {
+            instancia = new UsuarioDAO();
+        }
+        return instancia;
+    }
+
+    // Método para obtener un usuario por su ID
+    public Usuario obtenerUsuarioPorId(int idUsuario) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getIdUsuario() == idUsuario) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+    // Otros métodos para gestionar los usuarios (agregar, eliminar, etc.)
+}

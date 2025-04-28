@@ -1,0 +1,56 @@
+package vista;
+
+import modelo.Reserva;
+import modelo.Usuario;
+import controlador.ReservaController;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public class VistaReservaCliente extends JFrame {
+    private Usuario usuario;
+    private ReservaController reservaController;
+
+    public VistaReservaCliente(Usuario usuario) {
+        this.usuario = usuario;
+        this.reservaController = new ReservaController();
+        inicializarComponentes();
+    }
+
+    private void inicializarComponentes() {
+        setTitle("Vista de Reservas - Cliente");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null); // Centra la ventana
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        // Botón para hacer reserva
+        JButton hacerReservaButton = new JButton("Hacer Reserva");
+        hacerReservaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Lógica para hacer una nueva reserva
+                // Ejemplo: reservaController.hacerReserva(usuario.getIdUsuario(), mesa, fecha, hora);
+            }
+        });
+
+        // Botón para ver reservas
+        JButton verReservasButton = new JButton("Ver Mis Reservas");
+        verReservasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<Reserva> reservas = reservaController.verReservasUsuario(usuario.getIdUsuario());
+                // Muestra las reservas del usuario
+            }
+        });
+
+        panel.add(hacerReservaButton);
+        panel.add(verReservasButton);
+        add(panel);
+    }
+}

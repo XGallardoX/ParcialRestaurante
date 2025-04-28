@@ -52,14 +52,20 @@ public class VistaLogin extends JFrame {
                     // Cerrar la ventana de login
                     dispose();  // Esto cierra la ventana actual (Login)
 
-                    // Crear y mostrar la ventana de reservas
-                    VistaReserva vistaReserva = new VistaReserva(usuario);
-                    vistaReserva.setVisible(true);  // Abre la ventana de reservas
+                    // Redirigir dependiendo del rol
+                    if (usuario.getRol().equals("Administrador")) {
+                        VistaReservaAdministrador vistaAdmin = new VistaReservaAdministrador(usuario);
+                        vistaAdmin.setVisible(true);  // Abre la ventana de reservas administrador
+                    } else if (usuario.getRol().equals("Cliente")) {
+                        VistaReservaCliente vistaCliente = new VistaReservaCliente(usuario);
+                        vistaCliente.setVisible(true);  // Abre la ventana de reservas cliente
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Correo o contraseña incorrectos.");
                 }
             }
         });
+
 
      // Acción de botón de registro
         registroButton.addActionListener(new ActionListener() {

@@ -1,0 +1,62 @@
+package controlador;
+
+import modelo.Usuario;
+import modelo.UsuarioDAO;
+import modelo.Reserva;
+import modelo.ReservaDAO;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+public class ReservaController {
+    private ReservaDAO reservaDAO = ReservaDAO.getInstancia();
+    private UsuarioDAO usuarioDAO = UsuarioDAO.getInstancia();  // Asegúrate de tener un UsuarioDAO
+
+    public ReservaController() {
+        reservaDAO.cargarReservas(); // Cargar las reservas existentes al iniciar
+    }
+
+    // Método para obtener un usuario por su ID
+    public Usuario obtenerUsuarioPorId(int idUsuario) {
+        return usuarioDAO.obtenerUsuarioPorId(idUsuario); // Llamar al método del UsuarioDAO
+    }
+
+    // Método para hacer una reserva
+    public void hacerReserva(int idUsuario, int idMesa, LocalDate fecha, LocalTime hora) {
+        Reserva nuevaReserva = new Reserva(0, idUsuario, idMesa, fecha, hora, "Confirmada");
+        reservaDAO.agregarReserva(nuevaReserva);
+    }
+
+    // Método para ver las reservas de un usuario
+    public List<Reserva> verReservasUsuario(int idUsuario) {
+        return reservaDAO.obtenerReservasPorUsuario(idUsuario);
+    }
+    
+    // Método para cancelar una reserva
+    public void cancelarReserva(int idReserva) {
+        Reserva reserva = obtenerReservaPorId(idReserva);
+        if (reserva != null) {
+            reserva.setEstado("Cancelada");
+            reservaDAO.actualizarReserva(reserva); // Actualizar el estado de la reserva
+        }
+    }
+
+    // Método para eliminar una reserva
+    public void eliminarReserva(int idReserva) {
+        Reserva reserva = obtenerReservaPorId(idReserva);
+        if (reserva != null) {
+            reservaDAO.eliminarReserva(reserva); // Eliminar la reserva del DAO
+        }
+    }
+
+    // Método para obtener una reserva por su ID
+    public Reserva obtenerReservaPorId(int idReserva) {
+        return reservaDAO.obtenerReservaPorId(idReserva); // Consultar el DAO por la reserva
+    }
+
+    // Método para obtener todas las reservas (para administradores)
+    public List<Reserva> obtenerTodasLasReservas() {
+        return reservaDAO.obtenerTodasLasReservas();
+    }
+}

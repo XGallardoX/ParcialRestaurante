@@ -1,0 +1,92 @@
+package modelo;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UsuarioDAO {
+    private static UsuarioDAO instancia;
+    private List<Usuario> usuarios = new ArrayList<>();
+    private static final String CARPETA_USUARIOS = "data"; // Carpeta donde se guardará el archivo
+    private static final String ARCHIVO_USUARIOS = CARPETA_USUARIOS + "/usuarios.ser"; // Usamos .ser para archivos serializados
+
+    private UsuarioDAO() {}
+
+    // Método para obtener la instancia única del UsuarioDAO (Singleton)
+    public static UsuarioDAO getInstancia() {
+        if (instancia == null) {
+            instancia = new UsuarioDAO();
+        }
+        return instancia;
+    }
+
+    // Método para agregar un nuevo usuario
+    public void agregarUsuario(Usuario usuario) {
+        usuarios.add(usuario);
+        guardarUsuarios();  // Guardamos los usuarios en el archivo después de agregar uno nuevo
+    }
+
+    // Método para buscar un usuario por correo
+    public Usuario buscarPorCorreo(String correo) {
+        for (Usuario u : usuarios) {
+            if (u.getCorreo().equalsIgnoreCase(correo)) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+    // Método para obtener un usuario por su ID
+    public Usuario obtenerUsuarioPorId(int idUsuario) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getIdUsuario() == idUsuario) {
+                return usuario;
+            }
+        }
+        return null;  // Retorna null si no encuentra el usuario
+    }
+
+    // Cargar los usuarios desde el archivo
+    public void cargarUsuarios() {
+        // Crear la carpeta 'data' si no existe
+        File carpeta = new File(CARPETA_USUARIOS);
+        if (!carpeta.exists()) {
+            carpeta.mkdir(); // Crea la carpeta
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ARCHIVO_USUARIOS))) {
+            usuarios = (List<Usuario>) ois.readObject();  // Leer la lista de usuarios desde el archivo
+        } catch (FileNotFoundException e) {
+            // Si el archivo no existe, no hacemos nada, simplemente no hay usuarios cargados
+            System.out.println("Archivo de usuarios no encontrado. Creando nuevo archivo.");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Guardar los usuarios en el archivo
+    public void guardarUsuarios() {
+        // Crear la carpeta 'data' si no existe
+        File carpeta = new File(CARPETA_USUARIOS);
+        if (!carpeta.exists()) {
+            carpeta.mkdir(); // Crea la carpeta
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARCHIVO_USUARIOS))) {
+            oos.writeObject(usuarios);  // Guardamos la lista de usuarios en el archivo
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+ // Buscar usuario por ID
+    public Usuario buscarPorId(int idUsuario) {
+        for (Usuario u : usuarios) {
+            if (u.getIdUsuario() == idUsuario) {
+                return u;
+            }
+        }
+        return null;
+    }
+
+}

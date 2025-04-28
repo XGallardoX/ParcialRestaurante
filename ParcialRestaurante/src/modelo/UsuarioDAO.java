@@ -36,6 +36,16 @@ public class UsuarioDAO {
         return null;
     }
 
+    // Método para obtener un usuario por su ID
+    public Usuario obtenerUsuarioPorId(int idUsuario) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getIdUsuario() == idUsuario) {
+                return usuario;
+            }
+        }
+        return null;  // Retorna null si no encuentra el usuario
+    }
+
     // Cargar los usuarios desde el archivo
     public void cargarUsuarios() {
         // Crear la carpeta 'data' si no existe
@@ -68,4 +78,16 @@ public class UsuarioDAO {
             e.printStackTrace();
         }
     }
+    
+ // Buscar usuario por ID
+    public Usuario buscarPorId(int idUsuario) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getIdUsuario() == idUsuario) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
+
 }

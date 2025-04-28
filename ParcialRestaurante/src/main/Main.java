@@ -1,13 +1,12 @@
 package main;
 
-import controlador.LoginController;
-import vista.LoginView;
+import vista.VistaLogin;
 
 public class Main {
     public static void main(String[] args) {
-        // Solo mostramos la ventana de login
-        LoginController loginController = new LoginController();
-        LoginView loginView = new LoginView(loginController);
-        loginView.setVisible(true);
+        // Lanzar el login como primer pantalla
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new VistaLogin().setVisible(true);
+        });
     }
 }

@@ -1,0 +1,105 @@
+package vista;
+
+import controlador.ReservaController;
+import modelo.Reserva;
+import modelo.Usuario;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public class VistaReservaAdministrador extends JFrame {
+    private ReservaController reservaController;
+    private Usuario usuario;
+
+    public VistaReservaAdministrador(Usuario usuario) {
+        this.usuario = usuario;
+        reservaController = new ReservaController();
+        
+        setTitle("Reservas Administrador");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Crear los componentes de la ventana
+        JButton verReservasButton = new JButton("Ver Todas las Reservas");
+        JButton logoutButton = new JButton("Cerrar Sesión");
+
+        // Layout
+        setLayout(new GridLayout(2, 1));
+        add(verReservasButton);
+        add(logoutButton);
+
+        // Acción de ver todas las reservas
+        verReservasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                verReservas();
+            }
+        });
+
+        // Acción de cerrar sesión
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new VistaLogin().setVisible(true);  // Volver a la pantalla de login
+            }
+        });
+    }
+
+    // Método para ver todas las reservas
+    private void verReservas() {
+        List<Reserva> reservas = reservaController.obtenerTodasLasReservas();
+
+        // Definimos las columnas
+        String[] columnas = {"Mesa", "Fecha", "Hora", "Estado", "Usuario", "Correo", "Modificar", "Eliminar"};
+
+        // Llenamos los datos
+        String[][] datos = new String[reservas.size()][8];
+        for (int i = 0; i < reservas.size(); i++) {
+            Reserva reserva = reservas.get(i);
+            Usuario cliente = reservaController.obtenerUsuarioPorId(reserva.getIdUsuario());  // Suponiendo que tienes un método para obtener el usuario
+
+            datos[i][0] = String.valueOf(reserva.getIdMesa());
+            datos[i][1] = reserva.getFecha().toString();
+            datos[i][2] = reserva.getHora().toString();
+            datos[i][3] = reserva.getEstado();
+            datos[i][4] = cliente.getNombre();
+            datos[i][5] = cliente.getCorreo();
+            datos[i][6] = "Modificar";
+            datos[i][7] = "Eliminar";
+        }
+
+        // Crear la tabla
+        JTable tabla = new JTable(datos, columnas);
+        tabla.setRowHeight(25);
+        tabla.setFillsViewportHeight(true);
+        tabla.setGridColor(Color.LIGHT_GRAY);
+
+        // Acción para modificar o eliminar una reserva
+        tabla.getModel().addTableModelListener(e -> {
+            int row = e.getFirstRow();
+            if ("Modificar".equals(tabla.getValueAt(row, 6))) {
+                Reserva reserva = reservas.get(row);
+                // Implementar la modificación (puedes mostrar un formulario para modificar los campos)
+            }
+            if ("Eliminar".equals(tabla.getValueAt(row, 7))) {
+                Reserva reserva = reservas.get(row);
+                reservaController.eliminarReserva(reserva.getIdReserva());
+                JOptionPane.showMessageDialog(this, "Reserva eliminada.");
+                verReservas();  // Actualizar la vista
+            }
+        });
+
+        // Mostrar en un nuevo JFrame
+        JFrame frame = new JFrame("Reservas Administrador");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(700, 400);
+        frame.setLocationRelativeTo(this);
+        frame.add(new JScrollPane(tabla));
+        frame.setVisible(true);
+    }
+}

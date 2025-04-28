@@ -1,0 +1,12 @@
+package principal;
+
+import vista.VistaLogin;
+
+public class Main {
+    public static void main(String[] args) {
+        // Lanzar el login como primer pantalla
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            new VistaLogin().setVisible(true);
+        });
+    }
+}

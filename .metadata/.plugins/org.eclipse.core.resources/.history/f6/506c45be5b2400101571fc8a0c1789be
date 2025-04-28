@@ -1,0 +1,54 @@
+package controlador;
+
+import modelo.Reserva;
+import modelo.ReservaDAO;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+public class ReservaController {
+    private ReservaDAO reservaDAO = ReservaDAO.getInstancia();
+
+    public ReservaController() {
+        reservaDAO.cargarReservas(); // 🔥 Cargar las reservas existentes al iniciar
+    }
+
+    public void hacerReserva(int idUsuario, int idMesa, LocalDate fecha, LocalTime hora) {
+        Reserva nuevaReserva = new Reserva(0, idUsuario, idMesa, fecha, hora, "Confirmada");
+        reservaDAO.agregarReserva(nuevaReserva);
+    }
+
+    public List<Reserva> verReservasUsuario(int idUsuario) {
+        return reservaDAO.obtenerReservasPorUsuario(idUsuario);
+    }
+    
+    public void cancelarReserva(int idReserva) {
+        Reserva reserva = obtenerReservaPorId(idReserva);
+        if (reserva != null) {
+            reserva.setEstado("Cancelada");
+        }
+    }
+
+    public void eliminarReserva(int idReserva) {
+        Reserva reserva = obtenerReservaPorId(idReserva);
+        if (reserva != null) {
+            reservas.remove(reserva);
+        }
+    }
+
+    public Reserva obtenerReservaPorId(int idReserva) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getIdReserva() == idReserva) {
+                return reserva;
+            }
+        }
+        return null;
+    }
+
+    public List<Reserva> obtenerTodasLasReservas() {
+        return reservas;
+    }
+
+       
+}

@@ -1,16 +1,38 @@
 package modelo;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReservaDAO {
     private static ReservaDAO instancia;
-    private List<Reserva> reservas = new ArrayList<>();
-    private static final String CARPETA_RESERVAS = "data";
-    private static final String ARCHIVO_RESERVAS = CARPETA_RESERVAS + "/reservas.ser";
+    private List<Reserva> reservas;
+    private static final String CARPETA_USUARIOS = "data"; // Carpeta donde se guardará el archivo
+    private static final String ARCHIVO_RESERVAS = CARPETA_USUARIOS + "/reservas.ser"; // Usamos .ser para archivos serializados
+    
 
-    private ReservaDAO() {}
+    // Constructor privado para implementar el patrón Singleton
+    private ReservaDAO() {
+        reservas = new ArrayList<>();
+    }
+    
+ // Guardar las reservas en el archivo
+    public void guardarReservas() {
+        File carpeta = new File(CARPETA_USUARIOS);
+        if (!carpeta.exists()) {
+            carpeta.mkdir(); // Crear la carpeta si no existe
+        }
+
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARCHIVO_RESERVAS))) {
+            oos.writeObject(reservas);  // Guardar la lista de reservas
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static ReservaDAO getInstancia() {
         if (instancia == null) {
@@ -19,46 +41,65 @@ public class ReservaDAO {
         return instancia;
     }
 
-    public void agregarReserva(Reserva reserva) {
-        reservas.add(reserva);
-        guardarReservas(); // Guardar automáticamente al agregar
-    }
-
-    public List<Reserva> obtenerReservasPorUsuario(int idUsuario) {
-        List<Reserva> resultado = new ArrayList<>();
-        for (Reserva r : reservas) {
-            if (r.getIdUsuario() == idUsuario) {
-                resultado.add(r);
-            }
-        }
-        return resultado;
-    }
-
-    public void cargarReservas() {
-        File carpeta = new File(CARPETA_RESERVAS);
+    // Guardar los usuarios en el archivo
+    private void guardarUsuariosEnArchivo() {
+        // Crear la carpeta 'data' si no existe
+        File carpeta = new File(CARPETA_USUARIOS);
         if (!carpeta.exists()) {
-            carpeta.mkdir();
-        }
-
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ARCHIVO_RESERVAS))) {
-            reservas = (List<Reserva>) ois.readObject();
-        } catch (FileNotFoundException e) {
-            System.out.println("Archivo de reservas no encontrado. Creando nuevo archivo.");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void guardarReservas() {
-        File carpeta = new File(CARPETA_RESERVAS);
-        if (!carpeta.exists()) {
-            carpeta.mkdir();
+            carpeta.mkdir(); // Crea la carpeta
         }
 
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARCHIVO_RESERVAS))) {
-            oos.writeObject(reservas);
+            oos.writeObject(reservas);  // Guardamos la lista de usuarios en el archivo
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    // Método para agregar una nueva reserva
+    public void agregarReserva(Reserva reserva) {
+        reservas.add(reserva);
+    }
+
+    // Obtener reservas por usuario
+    public List<Reserva> obtenerReservasPorUsuario(int idUsuario) {
+        List<Reserva> reservasUsuario = new ArrayList<>();
+        for (Reserva reserva : reservas) {
+            if (reserva.getIdUsuario() == idUsuario) {
+                reservasUsuario.add(reserva);
+            }
+        }
+        return reservasUsuario;
+    }
+
+    // Obtener todas las reservas (para administradores)
+    public List<Reserva> obtenerTodasLasReservas() {
+        return reservas;
+    }
+
+    // Obtener una reserva por su ID
+    public Reserva obtenerReservaPorId(int idReserva) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getIdReserva() == idReserva) {
+                return reserva;
+            }
+        }
+        return null;
+    }
+
+
+    // Actualizar una reserva
+    public void actualizarReserva(Reserva reserva) {
+        // Aquí actualizas la reserva en la base de datos o en la lista
+    }
+
+    // Eliminar una reserva
+    public void eliminarReserva(int idReserva) {
+        Reserva reserva = obtenerReservaPorId(idReserva);
+        if (reserva != null) {
+            reservas.remove(reserva);
+            guardarReservas();
+        }
+    }
+
 }
