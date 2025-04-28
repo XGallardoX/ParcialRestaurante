@@ -1,0 +1,30 @@
+package main;
+
+import controlador.LoginController;
+import modelo.Usuario;
+import vista.LoginView;
+import vista.ReservaView;
+
+
+public class Main {
+    public static void main(String[] args) {
+        // Creamos los controladores y vistas
+        LoginController loginController = new LoginController();
+        LoginView loginView = new LoginView(loginController);
+        
+        // Mostramos la ventana de Login
+        loginView.setVisible(true);
+        
+        // Aquí iniciamos una lógica para que, una vez se haya hecho login, mostremos el menu de reservas
+        loginView.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                // Este evento se dispara cuando el login se cierra correctamente.
+                // Si el login fue exitoso, mostramos la ventana de reservas.
+                if (loginController.getUsuario() != null) {
+                    ReservaView reservaView = new ReservaView(loginController.getUsuario());
+                    reservaView.setVisible(true);
+                }
+            }
+        });
+    }
+}

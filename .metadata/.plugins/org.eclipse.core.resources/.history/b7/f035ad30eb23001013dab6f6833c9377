@@ -1,0 +1,68 @@
+package vista;
+
+import controlador.LoginController;
+import modelo.Usuario;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class VistaLogin extends JFrame {
+    private LoginController loginController;
+    private JTextField correoField;
+    private JPasswordField contrasenaField;
+
+    public VistaLogin() {
+        loginController = new LoginController();
+        setTitle("Login");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Crear los componentes de la ventana
+        JLabel correoLabel = new JLabel("Correo:");
+        correoField = new JTextField(20);
+        JLabel contrasenaLabel = new JLabel("Contraseña:");
+        contrasenaField = new JPasswordField(20);
+        JButton loginButton = new JButton("Iniciar Sesión");
+        JButton registroButton = new JButton("Registrar");
+
+        // Layout
+        setLayout(new GridLayout(4, 2));
+        add(correoLabel);
+        add(correoField);
+        add(contrasenaLabel);
+        add(contrasenaField);
+        add(loginButton);
+        add(registroButton);
+
+        // Acción de botón de login
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String correo = correoField.getText();
+                String contrasena = new String(contrasenaField.getPassword());
+                Usuario usuario = loginController.login(correo, contrasena);
+
+                if (usuario != null) {
+                    // Cerrar la ventana de login
+                    dispose();
+                    // Mostrar la ventana de reservas
+                    new VistaReserva(usuario).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Correo o contraseña incorrectos.");
+                }
+            }
+        });
+
+        // Acción de botón de registro
+        registroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Aquí puedes implementar la funcionalidad de registro si lo deseas
+                JOptionPane.showMessageDialog(null, "Funcionalidad de registro no implementada.");
+            }
+        });
+    }
+}

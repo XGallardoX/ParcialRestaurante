@@ -1,0 +1,94 @@
+package vista;
+
+import controlador.ReservaController;
+import modelo.Reserva;
+import modelo.Usuario;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+public class VistaReserva extends JFrame {
+    private ReservaController reservaController;
+    private Usuario usuario;
+
+    public VistaReserva(Usuario usuario) {
+        this.usuario = usuario;
+        reservaController = new ReservaController();
+        
+        setTitle("Reservas");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Crear los componentes de la ventana
+        JButton hacerReservaButton = new JButton("Hacer Reserva");
+        JButton verReservasButton = new JButton("Ver Mis Reservas");
+        JButton logoutButton = new JButton("Cerrar Sesión");
+
+        // Layout
+        setLayout(new GridLayout(3, 1));
+        add(hacerReservaButton);
+        add(verReservasButton);
+        add(logoutButton);
+
+        // Acción de hacer reserva
+        hacerReservaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                hacerReserva();
+            }
+        });
+
+        // Acción de ver reservas
+        verReservasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                verReservas();
+            }
+        });
+
+        // Acción de cerrar sesión
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new VistaLogin().setVisible(true);  // Volver a la pantalla de login
+            }
+        });
+    }
+
+    // Método para hacer una nueva reserva
+    private void hacerReserva() {
+        String idMesa = JOptionPane.showInputDialog(this, "Introduce el ID de la mesa:");
+        String fechaStr = JOptionPane.showInputDialog(this, "Introduce la fecha de la reserva (YYYY-MM-DD):");
+        String horaStr = JOptionPane.showInputDialog(this, "Introduce la hora de la reserva (HH:MM):");
+
+        LocalDate fecha = LocalDate.parse(fechaStr);
+        LocalTime hora = LocalTime.parse(horaStr);
+        
+        // Llamamos al controlador para hacer la reserva
+        reservaController.hacerReserva(usuario.getIdUsuario(), Integer.parseInt(idMesa), fecha, hora);
+        JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
+    }
+
+    // Método para ver las reservas de un usuario
+    private void verReservas() {
+        List<Reserva> reservas = reservaController.verReservasUsuario(usuario.getIdUsuario());
+
+        StringBuilder reservasText = new StringBuilder("Mis Reservas:\n");
+        for (Reserva reserva : reservas) {
+            reservasText.append("Mesa: ").append(reserva.getIdMesa())
+                        .append(", Fecha: ").append(reserva.getFecha())
+                        .append(", Hora: ").append(reserva.getHora())
+                        .append(", Estado: ").append(reserva.getEstado())
+                        .append("\n");
+        }
+
+        JOptionPane.showMessageDialog(this, reservasText.toString());
+    }
+}
