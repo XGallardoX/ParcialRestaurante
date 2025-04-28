@@ -64,55 +64,35 @@ public class VistaReserva extends JFrame {
 
     // Método para hacer una nueva reserva
     private void hacerReserva() {
-        boolean continuar = true;
+        String idMesaStr = JOptionPane.showInputDialog(this, "Introduce el ID de la mesa:");
+        String fechaStr = JOptionPane.showInputDialog(this, "Introduce la fecha de la reserva (MM-DD):");
+        String horaStr = JOptionPane.showInputDialog(this, "Introduce la hora de la reserva (HH:MM):");
 
-        while (continuar) {
-            try {
-                String idMesaStr = JOptionPane.showInputDialog(this, "Introduce el ID de la mesa:");
-                if (idMesaStr == null) return;
+        try {
+            int idMesa = Integer.parseInt(idMesaStr);
 
-                int idMesa = Integer.parseInt(idMesaStr);
+            // Asumir el año actual automáticamente
+            int anioActual = LocalDate.now().getYear();
+            LocalDate fecha = LocalDate.parse(anioActual + "-" + fechaStr);
+            LocalTime hora = LocalTime.parse(horaStr);
 
-                String fechaStr = JOptionPane.showInputDialog(this, "Introduce la fecha de la reserva (MM-DD):");
-                if (fechaStr == null) return;
+            // Validar que la fecha y hora no sean en el pasado
+            LocalDate hoy = LocalDate.now();
+            LocalTime horaActual = LocalTime.now();
 
-                String horaStr = JOptionPane.showInputDialog(this, "Introduce la hora de la reserva (HH:MM):");
-                if (horaStr == null) return;
-
-                // Año actual + fecha
-                int anioActual = LocalDate.now().getYear();
-                LocalDate fecha = LocalDate.parse(anioActual + "-" + fechaStr);
-                LocalTime hora = LocalTime.parse(horaStr);
-
-                // Validar que no sea en el pasado
-                LocalDate hoy = LocalDate.now();
-                LocalTime horaActual = LocalTime.now();
-
-                if (fecha.isBefore(hoy) || (fecha.isEqual(hoy) && hora.isBefore(horaActual))) {
-                    JOptionPane.showMessageDialog(this, "No puedes reservar en el pasado. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
-                    continue;
-                }
-
-                // Si todo está bien
-                reservaController.hacerReserva(usuario.getIdUsuario(), idMesa, fecha, hora);
-                JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
-
-                // Preguntar si quiere otra reserva
-                int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas hacer otra reserva?", "Otra reserva", JOptionPane.YES_NO_OPTION);
-
-                if (respuesta == JOptionPane.NO_OPTION) {
-                    continuar = false;
-                }
-                // Si dice "Sí", vuelve a iniciar el while automáticamente
-
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Datos inválidos. Por favor ingresa la información correctamente.", "Error", JOptionPane.ERROR_MESSAGE);
-                // Y vuelve a pedir datos
+            if (fecha.isBefore(hoy) || (fecha.isEqual(hoy) && hora.isBefore(horaActual))) {
+                JOptionPane.showMessageDialog(this, "No puedes hacer reservas en el pasado.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            // Llamamos al controlador para hacer la reserva
+            reservaController.hacerReserva(usuario.getIdUsuario(), idMesa, fecha, hora);
+            JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Datos inválidos. Asegúrate de introducir todo correctamente.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-
 
 
     // Método para ver las reservas de un usuario

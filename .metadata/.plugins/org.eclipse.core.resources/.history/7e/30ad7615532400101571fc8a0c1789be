@@ -64,12 +64,10 @@ public class VistaReserva extends JFrame {
 
     // Método para hacer una nueva reserva
     private void hacerReserva() {
-        boolean continuar = true;
-
-        while (continuar) {
+        while (true) {
             try {
                 String idMesaStr = JOptionPane.showInputDialog(this, "Introduce el ID de la mesa:");
-                if (idMesaStr == null) return;
+                if (idMesaStr == null) return;  // Si cancela, salir
 
                 int idMesa = Integer.parseInt(idMesaStr);
 
@@ -79,39 +77,31 @@ public class VistaReserva extends JFrame {
                 String horaStr = JOptionPane.showInputDialog(this, "Introduce la hora de la reserva (HH:MM):");
                 if (horaStr == null) return;
 
-                // Año actual + fecha
+                // Año actual + fecha ingresada
                 int anioActual = LocalDate.now().getYear();
                 LocalDate fecha = LocalDate.parse(anioActual + "-" + fechaStr);
                 LocalTime hora = LocalTime.parse(horaStr);
 
-                // Validar que no sea en el pasado
+                // Validaciones
                 LocalDate hoy = LocalDate.now();
                 LocalTime horaActual = LocalTime.now();
 
                 if (fecha.isBefore(hoy) || (fecha.isEqual(hoy) && hora.isBefore(horaActual))) {
                     JOptionPane.showMessageDialog(this, "No puedes reservar en el pasado. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
-                    continue;
+                    continue;  // Vuelve a pedir los datos
                 }
 
-                // Si todo está bien
+                // Si todo es correcto, hacemos la reserva
                 reservaController.hacerReserva(usuario.getIdUsuario(), idMesa, fecha, hora);
                 JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
-
-                // Preguntar si quiere otra reserva
-                int respuesta = JOptionPane.showConfirmDialog(this, "¿Deseas hacer otra reserva?", "Otra reserva", JOptionPane.YES_NO_OPTION);
-
-                if (respuesta == JOptionPane.NO_OPTION) {
-                    continuar = false;
-                }
-                // Si dice "Sí", vuelve a iniciar el while automáticamente
+                break;  // Salimos del bucle porque ya hizo la reserva
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Datos inválidos. Por favor ingresa la información correctamente.", "Error", JOptionPane.ERROR_MESSAGE);
-                // Y vuelve a pedir datos
+                // Y vuelve a preguntar automáticamente
             }
         }
     }
-
 
 
 
