@@ -22,7 +22,7 @@ public class VistaReservaCliente extends JFrame {
         this.usuario = usuario;
         reservaController = new ReservaController();
         
-        setTitle("Mis Reservas");
+        setTitle("Reservas Cliente");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -96,7 +96,8 @@ public class VistaReservaCliente extends JFrame {
                 }
 
                 // Si todo está bien
-                reservaController.hacerReserva(usuario.getIdUsuario(), idMesa, fecha, hora);
+                
+                reservaController.hacerReserva(usuario.getCorreo(), idMesa, fecha, hora);
                 JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
 
                 // Preguntar si quiere otra reserva
@@ -114,8 +115,9 @@ public class VistaReservaCliente extends JFrame {
 
     // Método para ver las reservas de un usuario
     private void verReservas() {
-        List<Reserva> reservas = reservaController.verReservasUsuario(usuario.getIdUsuario());
-
+        
+        List<Reserva> reservas = reservaController.verReservasUsuario(usuario.getCorreo());
+        System.out.println(usuario.getCorreo());    
         // Definimos las columnas
         String[] columnas = {"Mesa", "Fecha", "Hora", "Estado", "Cancelar"};
 
@@ -136,6 +138,14 @@ public class VistaReservaCliente extends JFrame {
         tabla.setFillsViewportHeight(true);
         tabla.setGridColor(Color.LIGHT_GRAY);
 
+        // Mostrar en un nuevo JFrame en lugar de JOptionPane
+        JFrame frame = new JFrame("Mis Reservas");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(500, 300);
+        frame.setLocationRelativeTo(this);
+        frame.add(new JScrollPane(tabla));
+        frame.setVisible(true);
+        
         // Acción para cancelar una reserva
         tabla.getModel().addTableModelListener(e -> {
             if (e.getType() == TableModelEvent.UPDATE) {
@@ -144,17 +154,10 @@ public class VistaReservaCliente extends JFrame {
                     Reserva reserva = reservas.get(row);
                     reservaController.cancelarReserva(reserva.getIdReserva());
                     JOptionPane.showMessageDialog(this, "Reserva cancelada.");
-                    verReservas();  // Actualizar la vista
+                    verReservas();
                 }
             }
         });
-
-        // Mostrar en un nuevo JFrame en lugar de JOptionPane
-        JFrame frame = new JFrame("Mis Reservas");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(500, 300);
-        frame.setLocationRelativeTo(this);
-        frame.add(new JScrollPane(tabla));
-        frame.setVisible(true);
+        
     }
 }

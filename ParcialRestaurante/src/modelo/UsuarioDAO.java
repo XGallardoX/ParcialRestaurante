@@ -47,6 +47,7 @@ public class UsuarioDAO {
     }
 
     // Cargar los usuarios desde el archivo
+    @SuppressWarnings("unchecked")
     public void cargarUsuarios() {
         // Crear la carpeta 'data' si no existe
         File carpeta = new File(CARPETA_USUARIOS);

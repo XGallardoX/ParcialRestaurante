@@ -11,16 +11,7 @@ public class Usuario implements Serializable {
     private String contrasena;
     private String rol; // "Cliente" o "Administrador"
 
-    // Constructor con idUsuario
-    public Usuario(int idUsuario, String nombre, String correo, String contrasena, String rol) {
-        this.idUsuario = idUsuario;
-        this.nombre = nombre;
-        this.correo = correo;
-        this.contrasena = contrasena;
-        this.rol = rol;
-    }
-
-    // Constructor sin idUsuario (para crear un nuevo usuario)
+    // Constructor
     public Usuario(String nombre, String correo, String contrasena, String rol) {
         this.nombre = nombre;
         this.correo = correo;

@@ -51,7 +51,7 @@ public class RegistroView extends JFrame {
                 String contrasena = new String(campoContrasena.getPassword());
                 String rol = (String) comboRol.getSelectedItem();
 
-                Usuario nuevoUsuario = new Usuario(0, nombre, correo, contrasena, rol);
+                Usuario nuevoUsuario = new Usuario(nombre, correo, contrasena, rol);
 
                 loginController.registrarUsuario(nuevoUsuario);
 

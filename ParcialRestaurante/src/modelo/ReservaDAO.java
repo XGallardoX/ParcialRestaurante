@@ -1,8 +1,11 @@
 package modelo;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +43,25 @@ public class ReservaDAO {
         }
         return instancia;
     }
+    @SuppressWarnings("unchecked")
+    public void cargarReservas() {
+            // Crear la carpeta 'data' si no existe
+            File carpeta = new File(CARPETA_USUARIOS);
+            if (!carpeta.exists()) {
+                carpeta.mkdir(); // Crea la carpeta
+            }
 
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ARCHIVO_RESERVAS))) {
+                reservas = (List<Reserva>) ois.readObject();  // Leer la lista de usuarios desde el archivo
+            } catch (FileNotFoundException e) {
+                // Si el archivo no existe, no hacemos nada, simplemente no hay usuarios cargados
+                System.out.println("Archivo de usuarios no encontrado. Creando nuevo archivo.");
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     // Guardar los usuarios en el archivo
+    @SuppressWarnings("unused")
     private void guardarUsuariosEnArchivo() {
         // Crear la carpeta 'data' si no existe
         File carpeta = new File(CARPETA_USUARIOS);
@@ -62,13 +82,14 @@ public class ReservaDAO {
     }
 
     // Obtener reservas por usuario
-    public List<Reserva> obtenerReservasPorUsuario(int idUsuario) {
+    public List<Reserva> obtenerReservasPorUsuario(String correo) {
         List<Reserva> reservasUsuario = new ArrayList<>();
         for (Reserva reserva : reservas) {
-            if (reserva.getIdUsuario() == idUsuario) {
+            if (reserva.getCorreoUsuario().equals(correo)) {
                 reservasUsuario.add(reserva);
             }
         }
+        System.out.println(reservasUsuario);
         return reservasUsuario;
     }
 
@@ -102,4 +123,5 @@ public class ReservaDAO {
         }
     }
 
+    
 }

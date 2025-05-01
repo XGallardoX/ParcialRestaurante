@@ -1,6 +1,8 @@
 package vista;
 
 import controlador.LoginController;
+import controlador.ReservaController;
+
 import modelo.Usuario;
 
 import javax.swing.*;
@@ -12,9 +14,16 @@ public class VistaLogin extends JFrame {
     private LoginController loginController;
     private JTextField correoField;
     private JPasswordField contrasenaField;
+    private ReservaController reservaController;
 
     public VistaLogin() {
         loginController = new LoginController();
+        reservaController = new ReservaController();
+
+        loginController.cargarUsuariosDesdeArchivo();
+        reservaController.cargarReservaDesdeArchivo();;
+
+
         setTitle("Login");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

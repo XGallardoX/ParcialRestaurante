@@ -94,7 +94,7 @@ public class VistaReserva extends JFrame {
                 }
 
                 // Si todo está bien
-                reservaController.hacerReserva(usuario.getIdUsuario(), idMesa, fecha, hora);
+                reservaController.hacerReserva(usuario.getCorreo(), idMesa, fecha, hora);
                 JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
 
                 // Preguntar si quiere otra reserva
@@ -117,7 +117,7 @@ public class VistaReserva extends JFrame {
 
     // Método para ver las reservas de un usuario
     private void verReservas() {
-        List<Reserva> reservas = reservaController.verReservasUsuario(usuario.getIdUsuario());
+        List<Reserva> reservas = reservaController.verReservasUsuario(usuario.getCorreo());
 
         // Definimos las columnas
         String[] columnas = {"Mesa", "Fecha", "Hora", "Estado"};

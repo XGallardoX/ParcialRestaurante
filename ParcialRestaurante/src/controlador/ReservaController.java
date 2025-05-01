@@ -21,14 +21,14 @@ public class ReservaController {
         usuarioDAO.cargarUsuarios();  // 🔥 Agregamos esto para que también cargue los usuarios
     }
 
-    public void hacerReserva(int idUsuario, int idMesa, LocalDate fecha, LocalTime hora) {
-        Reserva nuevaReserva = new Reserva(0, idUsuario, idMesa, fecha, hora, "Confirmada");
+    public void hacerReserva(String correoUsuario, int idMesa, LocalDate fecha, LocalTime hora) {
+        Reserva nuevaReserva = new Reserva(correoUsuario, idMesa, fecha, hora, "Confirmada");
         reservaDAO.agregarReserva(nuevaReserva);
         reservaDAO.guardarReservas(); // 🔥 Guardar después de agregar
     }
 
-    public List<Reserva> verReservasUsuario(int idUsuario) {
-        return reservaDAO.obtenerReservasPorUsuario(idUsuario);
+    public List<Reserva> verReservasUsuario(String correo) {
+        return reservaDAO.obtenerReservasPorUsuario(correo);
     }
     
     public void cancelarReserva(int idReserva) {
@@ -38,7 +38,23 @@ public class ReservaController {
             reservaDAO.guardarReservas(); // 🔥 Guardar después de cancelar
         }
     }
-
+    public void modificarReserva(Reserva reserva) {
+        // Obtener la reserva original a modificar
+        Reserva reservaExistente = reservaDAO.obtenerReservaPorId(reserva.getIdReserva());
+        
+        if (reservaExistente != null) {
+            // Actualizar los datos de la reserva existente con los nuevos valores
+            reservaExistente.setFecha(reserva.getFecha());
+            reservaExistente.setHora(reserva.getHora());
+            reservaExistente.setEstado(reserva.getEstado());
+            
+            // Guardar los cambios en la base de datos
+            reservaDAO.guardarReservas(); // 🔥 Guardar después de modificar
+        } else {
+            System.out.println("La reserva con ID " + reserva.getIdReserva() + " no existe.");
+        }
+    }
+    
     public void eliminarReserva(int idReserva) {
         reservaDAO.eliminarReserva(idReserva); // 🔥 Llamamos al DAO
     }
@@ -51,7 +67,10 @@ public class ReservaController {
         return reservaDAO.obtenerTodasLasReservas(); 
     }
 
-    public Usuario obtenerUsuarioPorId(int idUsuario) {
-        return usuarioDAO.buscarPorId(idUsuario); 
+    public Usuario obtenerUsuarioPorCorreo(String correo) {
+        return usuarioDAO.buscarPorCorreo(correo); 
+    }
+    public void cargarReservaDesdeArchivo() {
+        reservaDAO.cargarReservas(); // Cargar los usuarios desde el archivo
     }
 }
